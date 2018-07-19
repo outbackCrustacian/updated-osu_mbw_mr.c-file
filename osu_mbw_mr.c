@@ -247,6 +247,9 @@ int main(int argc, char *argv[])
            float sum = 0.0;
            float sum2 = 0.0;
            float bwnums[1000];
+           if(curr_size > 524288){
+               break;
+           }
            for(t = 0; t < 1000; t++){
                bw = calc_bw(rank, curr_size, options.pairs, options.window_size, s_buf, r_buf);
                sum += bw;
