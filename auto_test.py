@@ -19,6 +19,7 @@ def main():
         os.mkdir(dirs[3])
         os.chdir("..")
         i += 1
+    create_submit(False, True, 1)
 
 def create_submit(use_container, same_nodes, num_ranks):
     existing_dirs = glob.glob('[0-9][0-9][0-9][0-9][0-9]')
