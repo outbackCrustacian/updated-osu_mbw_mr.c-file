@@ -14,25 +14,25 @@ def main():
     os.mkdir(dirs[0])
     os.mkdir(dirs[1])
     i = 0
-    while(i <2):
+    while(i <= 2):
         os.chdir(dirs[i])
         os.mkdir(dirs[2])
         os.chdir(dirs[2])
         if(dirs[i] == dirs[1]):
             for d in range(len(ranks_per_node)):
-                create_submit(True, True, ranks_per_node[d])
+                create_submit(False, True, ranks_per_node[d])
         else:
             for d in range(len(ranks_per_node)):
-                create_submit(False, True, ranks_per_node[d])
+                create_submit(True, True, ranks_per_node[d])
         os.chdir("..")
         os.mkdir(dirs[3])
         os.chdir(dirs[3])
         if (dirs[i] == dirs[1]):
             for d in range(len(ranks_per_node)):
-                create_submit(True, False, ranks_per_node[d])
+                create_submit(False, False, ranks_per_node[d])
         else:
             for d in range(len(ranks_per_node)):
-                create_submit(False, False, ranks_per_node[d])
+                create_submit(True, False, ranks_per_node[d])
         os.chdir("..")
         os.chdir("..")
         os.chdir("..")
