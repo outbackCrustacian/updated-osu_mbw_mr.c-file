@@ -57,7 +57,7 @@ def create_submit(use_container, same_nodes, num_ranks):
         open(job_dir + '/submit.sh', 'w').write(submit)
         os.chmod(job_dir + '/submit.sh', stat.S_IRWXU | stat.S_IRWXG | stat.S_IXOTH | stat.S_IROTH)
 
-def copy_base_dir(job_dir,base_dir='temp'):
+def copy_base_dir(job_dir,base_dir='basejob'):
 
    # copy EVNT files
    os.system('cp -d ' + base_dir + '/EVNT* ' + job_dir)
