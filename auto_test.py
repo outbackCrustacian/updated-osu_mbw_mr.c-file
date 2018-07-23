@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import os, sys, optparse, logging, glob, stat, json
+logger = logging.getLogger(__name__)
 
 global dirs, nodes, ranks_per_node
 dirs = ["in_container/", "out_container/", "same_nodes/", "different_nodes/"]
