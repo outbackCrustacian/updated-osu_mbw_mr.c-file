@@ -11,21 +11,35 @@ ranks_per_node = ["8", "16", "32", "64", "128"]
 def main():
     os.mkdir("benchmarking_directory/")
     os.chdir("benchmarking_directory/")
-    create_submit(False, True, 1)
     os.mkdir(dirs[0])
     os.mkdir(dirs[1])
     i = 0
     while(i <2):
         os.chdir(dirs[i])
         os.mkdir(dirs[2])
+        os.chdir(dirs[2])
+        if(dirs[i] == dirs[1]):
+            for d in range(len(ranks_per_node)):
+                create_submit(True, True, ranks_per_node[d])
+        else:
+            for d in range(len(ranks_per_node)):
+                create_submit(False, True, ranks_per_node[d])
+        os.chdir("..")
         os.mkdir(dirs[3])
+        os.chdir(dirs[3])
+        if (dirs[i] == dirs[1]):
+            for d in range(len(ranks_per_node)):
+                create_submit(True, False, ranks_per_node[d])
+        else:
+            for d in range(len(ranks_per_node)):
+                create_submit(False, False, ranks_per_node[d])
+        os.chdir("..")
+        os.chdir("..")
         os.chdir("..")
         i += 1
 
 def create_submit(use_container, same_nodes, num_ranks):
-    existing_dirs = glob.glob('[0-9][0-9][0-9][0-9][0-9]')
-
-    job_num = 'UseContainer' + str(use_container) + 'samenodes' + str(same_nodes) + 'numranks' + str(num_ranks)
+    job_num = 'numranks' + str(num_ranks)
 
     job_dir = os.getcwd() + '/' + job_num
 
@@ -85,9 +99,6 @@ module swap PrgEnv-intel PrgEnv-gnu
 
 #run benchmark without singularity
 aprun -n $TOTAL_RANKS -N $RANKS_PER_NODE /home/sgww/osu_bench/mpi/collective/osu_bcast
-aprun 4 $TOTAL_RANKS -N $RANKS_PER_NODE /home/sgww/osu_bench/mpi/collective/osu_bcast
-aprun 8 $TOTAL_RANKS -N $RANKS_PER_NODE /home/sgww/osu_bench/mpi/collective/osu_bcast
-wait
 
 # Use Cray's Application Binary Independent MPI build
 module swap cray-mpich cray-mpich-abi
