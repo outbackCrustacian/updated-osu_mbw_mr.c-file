@@ -13,7 +13,7 @@ def main():
     os.mkdir(dirs[0])
     os.mkdir(dirs[1])
     i = 0
-    while(i <3):
+    while(i <2):
         os.chdir(dirs[i])
         os.mkdir(dirs[2])
         os.mkdir(dirs[3])
