@@ -12,7 +12,8 @@ def main():
     os.chdir("benchmarking_directory/")
     os.mkdir(dirs[0])
     os.mkdir(dirs[1])
-    for i in dirs:
+    i = 0
+    while(i <3):
         os.chdir(dirs[i])
         os.mkdir(dirs[2])
         os.mkdir(dirs[3])
