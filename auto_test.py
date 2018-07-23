@@ -14,7 +14,7 @@ def main():
     os.mkdir(dirs[0])
     os.mkdir(dirs[1])
     i = 0
-    while(i <= 2):
+    while(i < 2):
         os.chdir(dirs[i])
         os.mkdir(dirs[2])
         os.chdir(dirs[2])
@@ -35,7 +35,7 @@ def main():
                 create_submit(True, False, ranks_per_node[d])
         os.chdir("..")
         os.chdir("..")
-        os.chdir("..")
+        #os.chdir("..")
         i += 1
 
 def create_submit(use_container, same_nodes, num_ranks):
