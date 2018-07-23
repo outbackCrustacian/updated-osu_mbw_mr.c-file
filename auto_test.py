@@ -2,6 +2,7 @@
 import os, sys, optparse, logging, glob, stat, json
 logger = logging.getLogger(__name__)
 
+#set up lists to be looped through later
 global dirs, nodes, ranks_per_node
 dirs = ["in_container/", "out_container/", "same_nodes/", "different_nodes/"]
 nodes = ["1", "2", "4", "8"]
@@ -9,17 +10,22 @@ ranks_per_node = ["8", "16", "32", "64", "128"]
 
 
 def main():
+    #create a base directory
     os.mkdir("benchmarking_directory/")
     os.chdir("benchmarking_directory/")
+    #make directories for in and out of the container
     os.mkdir(dirs[0])
     os.mkdir(dirs[1])
     i = 0
     while(i < 2):
+        #1st time through, this makes the directories for inside a container and makes the settings.txt and submit.sh files
+        #second time through it does the same but for outside the container
         os.chdir(dirs[i])
         os.mkdir(dirs[2])
         os.chdir(dirs[2])
         if(dirs[i] == dirs[1]):
             for d in range(len(ranks_per_node)):
+                #creating files and directories for each different mpi rank per node to be tested
                 create_submit(False, True, ranks_per_node[d])
         else:
             for d in range(len(ranks_per_node)):
@@ -35,7 +41,6 @@ def main():
                 create_submit(True, False, ranks_per_node[d])
         os.chdir("..")
         os.chdir("..")
-        #os.chdir("..")
         i += 1
 
 def create_submit(use_container, same_nodes, num_ranks):
@@ -67,7 +72,9 @@ def create_submit(use_container, same_nodes, num_ranks):
     submit = submit_template.format(num_ranks=num_ranks,
                                     queue=queue,
                                     job_dir=job_dir,
-                                    job_num=job_num)
+                                    job_num=job_num,
+                                    same_nodes=same_nodes,
+                                    use_container=use_container)
     open(job_dir + '/submit.sh', 'w').write(submit)
     os.chmod(job_dir + '/submit.sh', stat.S_IRWXU | stat.S_IRWXG | stat.S_IXOTH | stat.S_IROTH)
 
@@ -87,7 +94,11 @@ submit_template = '''#!/bin/bash
 #COBALT -A datascience
 #COBALT --jobname {job_num}
 #COBALT --cwd {job_dir}
-#COBALT --attrs location=0,1,2,3,4,5,6,7
+
+SAME_NODES={same_nodes}
+if [ "$SAME_NODES" = "TRUE" ] || [ "$SAME_NODES" = "true" ] || [ "$SAME_NODES" = "True" ]; then
+   #COBALT --attrs location=0,1,2,3,4,5,6,7
+fi
 
 RANKS_PER_NODE={num_ranks}
 NUM_NODES=$COBALT_JOBSIZE
@@ -97,8 +108,14 @@ TOTAL_RANKS=$(( $COBALT_JOBSIZE * $RANKS_PER_NODE ))
 # app build with GNU not Intel
 module swap PrgEnv-intel PrgEnv-gnu
 
-#run benchmark without singularity
-aprun -n $TOTAL_RANKS -N $RANKS_PER_NODE /home/sgww/osu_bench/mpi/collective/osu_bcast
+if [ "$USE_CONTAINER" = "TRUE" ] || [ "$USE_CONTAINER" = "true" ] || [ "$USE_CONTAINER" = "True" ]; then
+   #run benchmark without singularity
+   aprun -n $RANKS_PER_NODE -N $RANKS_PER_NODE /home/sgww/osu_bench/mpi/collective/osu_bcast
+   aprun -n $RANKS_PER_NODE*2 -N $RANKS_PER_NODE /home/sgww/osu_bench/mpi/collective/osu_bcast
+   aprun -n $RANKS_PER_NODE*4 -N $RANKS_PER_NODE /home/sgww/osu_bench/mpi/collective/osu_bcast
+   aprun -n $RANKS_PER_NODE*8 -N $RANKS_PER_NODE /home/sgww/osu_bench/mpi/collective/osu_bcast
+   wait
+fi
 
 # Use Cray's Application Binary Independent MPI build
 module swap cray-mpich cray-mpich-abi
@@ -119,7 +136,15 @@ echo $SINGULARITYENV_LD_LIBRARY_PATH
 # -N <MPI ranks per node>
 export SINGULARITYENV_LD_LIBRARY_PATH=/lib64:/lib:/usr/lib64:/usr/lib:$SINGULARITYENV_LD_LIBRARY_PATH
 # aprun -n 1 -N 1 singularity exec testbuild2.simg /bin/bash -c "echo \$LD_LIBRARY_PATH"
-#aprun -n $TOTAL_RANKS -N $RANKS_PER_NODE singularity run -B /opt:/opt:ro -B /var/opt:/var/opt:ro --app mbw_mr updatedbenchcontainer
+
+USE_CONTAINER={use_container}
+if [ "$USE_CONTAINER" = "TRUE" ] || [ "$USE_CONTAINER" = "true" ] || [ "$USE_CONTAINER" = "True" ]; then
+   aprun -n $RANKS_PER_NODE -N $RANKS_PER_NODE singularity run -B /opt:/opt:ro -B /var/opt:/var/opt:ro --app mbw_mr updatedbenchcontainer
+   aprun -n $RANKS_PER_NODE*2 -N $RANKS_PER_NODE singularity run -B /opt:/opt:ro -B /var/opt:/var/opt:ro --app mbw_mr updatedbenchcontainer
+   aprun -n $RANKS_PER_NODE*4 -N $RANKS_PER_NODE singularity run -B /opt:/opt:ro -B /var/opt:/var/opt:ro --app mbw_mr updatedbenchcontainer
+   aprun -n $RANKS_PER_NODE*8 -N $RANKS_PER_NODE singularity run -B /opt:/opt:ro -B /var/opt:/var/opt:ro --app mbw_mr updatedbenchcontainer
+   wait
+fi
 '''
 
 if __name__ == "__main__":
