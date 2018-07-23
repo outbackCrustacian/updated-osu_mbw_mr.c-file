@@ -64,12 +64,12 @@ def create_submit(use_container, same_nodes, num_ranks):
     queue = 'default'
     if int(num_ranks) <= 8:
         queue = 'debug-flat-quad'
-        submit = submit_template.format(num_ranks=num_ranks,
-                                        queue=queue,
-                                        job_dir=job_dir,
-                                        job_num=job_num)
-        open(job_dir + '/submit.sh', 'w').write(submit)
-        os.chmod(job_dir + '/submit.sh', stat.S_IRWXU | stat.S_IRWXG | stat.S_IXOTH | stat.S_IROTH)
+    submit = submit_template.format(num_ranks=num_ranks,
+                                    queue=queue,
+                                    job_dir=job_dir,
+                                    job_num=job_num)
+    open(job_dir + '/submit.sh', 'w').write(submit)
+    os.chmod(job_dir + '/submit.sh', stat.S_IRWXU | stat.S_IRWXG | stat.S_IXOTH | stat.S_IROTH)
 
 def copy_base_dir(job_dir,base_dir='basejob'):
 
