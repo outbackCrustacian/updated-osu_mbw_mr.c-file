@@ -101,6 +101,7 @@ submit_template = '''#!/bin/bash
 SAME_NODES={same_nodes}
 if [ "$SAME_NODES" = "TRUE" ] || [ "$SAME_NODES" = "true" ] || [ "$SAME_NODES" = "True" ]; then
    #COBALT --attrs location=0,1,2,3,4,5,6,7
+   echo SAME NODES TRUE
 fi
 
 RANKS_PER_NODE={num_ranks}
@@ -113,9 +114,14 @@ module swap PrgEnv-intel PrgEnv-gnu
 
 if [ "$USE_CONTAINER" = "TRUE" ] || [ "$USE_CONTAINER" = "true" ] || [ "$USE_CONTAINER" = "True" ]; then
    #run benchmark without singularity
+   echo RUNNING OUTSIDE OF CONTAINER
+   echo ONE NODE
    aprun -n $RANKS_PER_NODE -N $RANKS_PER_NODE /home/sgww/osu_bench/mpi/collective/osu_bcast
+   echo TWO NODES
    aprun -n $RANKS_PER_NODE*2 -N $RANKS_PER_NODE /home/sgww/osu_bench/mpi/collective/osu_bcast
+   echo FOUR NODES
    aprun -n $RANKS_PER_NODE*4 -N $RANKS_PER_NODE /home/sgww/osu_bench/mpi/collective/osu_bcast
+   echo EIGHT NODES
    aprun -n $RANKS_PER_NODE*8 -N $RANKS_PER_NODE /home/sgww/osu_bench/mpi/collective/osu_bcast
    wait
 fi
@@ -142,9 +148,14 @@ export SINGULARITYENV_LD_LIBRARY_PATH=/lib64:/lib:/usr/lib64:/usr/lib:$SINGULARI
 
 USE_CONTAINER={use_container}
 if [ "$USE_CONTAINER" = "TRUE" ] || [ "$USE_CONTAINER" = "true" ] || [ "$USE_CONTAINER" = "True" ]; then
+   echo RUNNING INSIDE CONTAINER
+   echo ONE NODE
    aprun -n $RANKS_PER_NODE -N $RANKS_PER_NODE singularity run -B /opt:/opt:ro -B /var/opt:/var/opt:ro --app mbw_mr /home/sgww/updatedbenchcontainer
+   echo TWO NODES
    aprun -n $RANKS_PER_NODE*2 -N $RANKS_PER_NODE singularity run -B /opt:/opt:ro -B /var/opt:/var/opt:ro --app mbw_mr /home/sgww/updatedbenchcontainer
+   echo FOUR NODES
    aprun -n $RANKS_PER_NODE*4 -N $RANKS_PER_NODE singularity run -B /opt:/opt:ro -B /var/opt:/var/opt:ro --app mbw_mr /home/sgww/updatedbenchcontainer
+   echo EIGHT NODES
    aprun -n $RANKS_PER_NODE*8 -N $RANKS_PER_NODE singularity run -B /opt:/opt:ro -B /var/opt:/var/opt:ro --app mbw_mr /home/sgww/updatedbenchcontainer
    wait
 fi
