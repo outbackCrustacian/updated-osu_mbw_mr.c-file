@@ -77,6 +77,7 @@ def create_submit(use_container, same_nodes, num_ranks):
                                     use_container=use_container)
     open(job_dir + '/submit.sh', 'w').write(submit)
     os.chmod(job_dir + '/submit.sh', stat.S_IRWXU | stat.S_IRWXG | stat.S_IXOTH | stat.S_IROTH)
+    os.system('qsub submit.sh')
 
 def copy_base_dir(job_dir,base_dir='basejob'):
 
@@ -89,7 +90,7 @@ def copy_base_dir(job_dir,base_dir='basejob'):
 
 submit_template = '''#!/bin/bash
 #COBALT -n 128
-#COBALT -t 60
+#COBALT -t 120
 #COBALT -q {queue}
 #COBALT -A datascience
 #COBALT --jobname {job_num}
@@ -139,10 +140,10 @@ export SINGULARITYENV_LD_LIBRARY_PATH=/lib64:/lib:/usr/lib64:/usr/lib:$SINGULARI
 
 USE_CONTAINER={use_container}
 if [ "$USE_CONTAINER" = "TRUE" ] || [ "$USE_CONTAINER" = "true" ] || [ "$USE_CONTAINER" = "True" ]; then
-   aprun -n $RANKS_PER_NODE -N $RANKS_PER_NODE singularity run -B /opt:/opt:ro -B /var/opt:/var/opt:ro --app mbw_mr updatedbenchcontainer
-   aprun -n $RANKS_PER_NODE*2 -N $RANKS_PER_NODE singularity run -B /opt:/opt:ro -B /var/opt:/var/opt:ro --app mbw_mr updatedbenchcontainer
-   aprun -n $RANKS_PER_NODE*4 -N $RANKS_PER_NODE singularity run -B /opt:/opt:ro -B /var/opt:/var/opt:ro --app mbw_mr updatedbenchcontainer
-   aprun -n $RANKS_PER_NODE*8 -N $RANKS_PER_NODE singularity run -B /opt:/opt:ro -B /var/opt:/var/opt:ro --app mbw_mr updatedbenchcontainer
+   aprun -n $RANKS_PER_NODE -N $RANKS_PER_NODE singularity run -B /opt:/opt:ro -B /var/opt:/var/opt:ro --app mbw_mr /home/sgww/updatedbenchcontainer
+   aprun -n $RANKS_PER_NODE*2 -N $RANKS_PER_NODE singularity run -B /opt:/opt:ro -B /var/opt:/var/opt:ro --app mbw_mr /home/sgww/updatedbenchcontainer
+   aprun -n $RANKS_PER_NODE*4 -N $RANKS_PER_NODE singularity run -B /opt:/opt:ro -B /var/opt:/var/opt:ro --app mbw_mr /home/sgww/updatedbenchcontainer
+   aprun -n $RANKS_PER_NODE*8 -N $RANKS_PER_NODE singularity run -B /opt:/opt:ro -B /var/opt:/var/opt:ro --app mbw_mr /home/sgww/updatedbenchcontainer
    wait
 fi
 '''
