@@ -118,11 +118,11 @@ if [ "$USE_CONTAINER" = "TRUE" ] || [ "$USE_CONTAINER" = "true" ] || [ "$USE_CON
    echo ONE NODE
    aprun -n $RANKS_PER_NODE -N $RANKS_PER_NODE /home/sgww/osu_bench/mpi/collective/osu_bcast
    echo TWO NODES
-   aprun -n $RANKS_PER_NODE*2 -N $RANKS_PER_NODE /home/sgww/osu_bench/mpi/collective/osu_bcast
+   aprun -n $(($RANKS_PER_NODE*2)) -N $RANKS_PER_NODE /home/sgww/osu_bench/mpi/collective/osu_bcast
    echo FOUR NODES
-   aprun -n $RANKS_PER_NODE*4 -N $RANKS_PER_NODE /home/sgww/osu_bench/mpi/collective/osu_bcast
+   aprun -n $(($RANKS_PER_NODE*4)) -N $RANKS_PER_NODE /home/sgww/osu_bench/mpi/collective/osu_bcast
    echo EIGHT NODES
-   aprun -n $RANKS_PER_NODE*8 -N $RANKS_PER_NODE /home/sgww/osu_bench/mpi/collective/osu_bcast
+   aprun -n $(($RANKS_PER_NODE*8)) -N $RANKS_PER_NODE /home/sgww/osu_bench/mpi/collective/osu_bcast
    wait
 fi
 
@@ -152,11 +152,11 @@ if [ "$USE_CONTAINER" = "TRUE" ] || [ "$USE_CONTAINER" = "true" ] || [ "$USE_CON
    echo ONE NODE
    aprun -n $RANKS_PER_NODE -N $RANKS_PER_NODE singularity run -B /opt:/opt:ro -B /var/opt:/var/opt:ro --app mbw_mr /home/sgww/updatedbenchcontainer
    echo TWO NODES
-   aprun -n $RANKS_PER_NODE*2 -N $RANKS_PER_NODE singularity run -B /opt:/opt:ro -B /var/opt:/var/opt:ro --app mbw_mr /home/sgww/updatedbenchcontainer
+   aprun -n $(($RANKS_PER_NODE*2)) -N $RANKS_PER_NODE singularity run -B /opt:/opt:ro -B /var/opt:/var/opt:ro --app mbw_mr /home/sgww/updatedbenchcontainer
    echo FOUR NODES
-   aprun -n $RANKS_PER_NODE*4 -N $RANKS_PER_NODE singularity run -B /opt:/opt:ro -B /var/opt:/var/opt:ro --app mbw_mr /home/sgww/updatedbenchcontainer
+   aprun -n $(($RANKS_PER_NODE*4)) -N $RANKS_PER_NODE singularity run -B /opt:/opt:ro -B /var/opt:/var/opt:ro --app mbw_mr /home/sgww/updatedbenchcontainer
    echo EIGHT NODES
-   aprun -n $RANKS_PER_NODE*8 -N $RANKS_PER_NODE singularity run -B /opt:/opt:ro -B /var/opt:/var/opt:ro --app mbw_mr /home/sgww/updatedbenchcontainer
+   aprun -n $(($RANKS_PER_NODE*8)) -N $RANKS_PER_NODE singularity run -B /opt:/opt:ro -B /var/opt:/var/opt:ro --app mbw_mr /home/sgww/updatedbenchcontainer
    wait
 fi
 '''
