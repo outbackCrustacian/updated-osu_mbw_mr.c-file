@@ -77,7 +77,9 @@ def create_submit(use_container, same_nodes, num_ranks):
                                     use_container=use_container)
     open(job_dir + '/submit.sh', 'w').write(submit)
     os.chmod(job_dir + '/submit.sh', stat.S_IRWXU | stat.S_IRWXG | stat.S_IXOTH | stat.S_IROTH)
+    os.chdir(job_dir)
     os.system('qsub submit.sh')
+    os.chdir("..")
 
 def copy_base_dir(job_dir,base_dir='basejob'):
 
