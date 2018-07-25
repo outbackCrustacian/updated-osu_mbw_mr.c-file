@@ -92,7 +92,7 @@ def copy_base_dir(job_dir,base_dir='basejob'):
 
 submit_template = '''#!/bin/bash
 #COBALT -n 128
-#COBALT -t 120
+#COBALT -t 180
 #COBALT -q {queue}
 #COBALT -A datascience
 #COBALT --jobname {job_num}
