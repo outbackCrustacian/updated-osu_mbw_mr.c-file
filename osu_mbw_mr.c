@@ -269,6 +269,10 @@ int main(int argc, char *argv[])
                    fprintf(stdout, "%-*d%*.*f%*.*f%*.*f%*.*f\n", 10, curr_size,
                                               FIELD_WIDTH, FLOAT_PRECISION, bw, FIELD_WIDTH, FLOAT_PRECISION, avg, FIELD_WIDTH, FLOAT_PRECISION, sigma, FIELD_WIDTH,
                                                                          FLOAT_PRECISION, rate);
+                   int z;
+                   for(z = 0; z < 1000; z++){
+                     printf ("size = %d",bwnums[z]);
+                   }
                }
 
                else {
