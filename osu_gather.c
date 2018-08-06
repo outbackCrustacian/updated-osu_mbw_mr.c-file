@@ -88,8 +88,12 @@ main (int argc, char *argv[])
 
     for(size=options.min_message_size; size <= options.max_message_size; size *= 2) {
         if (size > LARGE_MESSAGE_SIZE) {
-            options.skip = options.skip_large; 
+            options.skip = options.skip_large;
             options.iterations = options.iterations_large;
+        }
+
+        if(size >= 530000){
+          break;
         }
 
         MPI_CHECK(MPI_Barrier(MPI_COMM_WORLD));
@@ -133,7 +137,7 @@ main (int argc, char *argv[])
         }
         sum2 = sum2/1000;
         double sigma = sqrt(sum2);
-        print_statsk(rank, size, avg_time, avgk, sigma); 
+        print_statsk(rank, size, avg_time, avgk, sigma);
     }
 
     if (0 == rank) {

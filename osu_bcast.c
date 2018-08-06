@@ -87,6 +87,10 @@ int main(int argc, char *argv[])
             options.iterations = options.iterations_large;
         }
 
+        if(size >= 530000){
+          break;
+        }
+
         int a, b, trials = 1000;
         double avgk = 0, sum = 0, sum2 = 0;
         double nums_ls[1000];

@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
     if (options.max_message_size > options.max_mem_limit) {
         if (rank == 0) {
             fprintf(stderr, "Warning! Increase the Max Memory Limit to be able to run up to %ld bytes.\n"
-                            "Continuing with max message size of %ld bytes\n", 
+                            "Continuing with max message size of %ld bytes\n",
                             options.max_message_size, options.max_mem_limit);
         }
         options.max_message_size = options.max_mem_limit;
@@ -100,6 +100,10 @@ int main(int argc, char *argv[])
             options.iterations = options.iterations_large;
         }
 
+        if(size >= 530000){
+          break;
+        }
+
         MPI_CHECK(MPI_Barrier(MPI_COMM_WORLD));
 
         int a, b, trials = 1000;
@@ -110,7 +114,7 @@ int main(int argc, char *argv[])
             timer=0.0;
             for(i=0; i < options.iterations + options.skip ; i++) {
                 t_start = MPI_Wtime();
-                MPI_CHECK(MPI_Allreduce(sendbuf, recvbuf, size, MPI_FLOAT, MPI_SUM, MPI_COMM_WORLD )); 
+                MPI_CHECK(MPI_Allreduce(sendbuf, recvbuf, size, MPI_FLOAT, MPI_SUM, MPI_COMM_WORLD ));
                 t_stop = MPI_Wtime();
 
                 if(i>=options.skip){
