@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
     if (options.max_message_size > options.max_mem_limit) {
         if (rank == 0) {
             fprintf(stderr, "Warning! Increase the Max Memory Limit to be able to run up to %ld bytes.\n"
-                            "Continuing with max message size of %ld bytes\n", 
+                            "Continuing with max message size of %ld bytes\n",
                             options.max_message_size, options.max_mem_limit);
         }
         options.max_message_size = options.max_mem_limit;
@@ -79,11 +79,11 @@ int main(int argc, char *argv[])
     }
     set_buffer(buffer, options.accel, 1, options.max_message_size);
 
-    print_preamble(rank);
+    print_preamblek(rank);
 
     for(size=options.min_message_size; size <= options.max_message_size; size *= 2) {
         if(size > LARGE_MESSAGE_SIZE) {
-            options.skip = options.skip_large; 
+            options.skip = options.skip_large;
             options.iterations = options.iterations_large;
         }
 
