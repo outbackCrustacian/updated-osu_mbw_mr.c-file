@@ -84,7 +84,7 @@ main (int argc, char *argv[])
     }
     set_buffer(sendbuf, options.accel, 0, options.max_message_size);
 
-    print_preamble(rank);
+    print_preamblek(rank);
 
     for(size=options.min_message_size; size <= options.max_message_size; size *= 2) {
         if (size > LARGE_MESSAGE_SIZE) {
